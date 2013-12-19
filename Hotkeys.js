@@ -2,9 +2,9 @@
 
 (function() {
 
-	var hotkeys = angular.module('drahak.hotkeys', []);
+	var hotKeys = angular.module('drahak.hotkeys', []);
 
-	hotkeys.service('HotkeyParse', function() {
+	hotKeys.service('ParseKey', function() {
 		var lexer = {
 			'backspace': 8,
 			'return': 8,
@@ -37,7 +37,7 @@
 				} else if (expr.length === 1) {
 					keys.push(expr.charCodeAt(0));
 				} else {
-					throw new Error('HotkeyParse expects one character or special expression like "Tab" or "Control", "' + expr + '" given');
+					throw new Error('ParseKey expects one character or special expression like "Tab" or "Control", "' + expr + '" given');
 				}
 			});
 

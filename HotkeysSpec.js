@@ -1,11 +1,11 @@
 'use strict';
 
-describe('Hotkeys expression parser', function() {
+describe('ParseKey expression parser', function() {
 
 	var parse;
 	beforeEach(module('drahak.hotkeys'));
-	beforeEach(inject(function(HotkeyParse) {
-		parse = HotkeyParse;
+	beforeEach(inject(function(ParseKey) {
+		parse = ParseKey;
 	}));
 
 	it('parses string into keycodes array', function() {
