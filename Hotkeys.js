@@ -24,23 +24,31 @@
 		}
 	}]);
 
-	hotKeys.service('HotKey', ['ParseKey', function(ParseKey) {
+	hotKeys.service('HotKey', ['ParseKey', '$window', function(ParseKey, $window) {
 		var hotKeys = {};
-		return {
+		var HotKey = {
 
 			/**
 			 * Get hot key index
-			 * @param {String} hotKeyExpr
+			 * @param {String|Array.<Number>} hotKeyExpr
 			 * @returns {String}
 			 * @private
 			 */
 			_getHotKeyIndex: function(hotKeyExpr) {
-				return ParseKey(hotKeyExpr).sort().join('+');
+				var hotKey;
+				if (angular.isString(hotKeyExpr)) {
+					hotKey = ParseKey(hotKeyExpr);
+				} else if (angular.isArray(hotKeyExpr)) {
+					hotKey = hotKeyExpr;
+				} else {
+					throw new Error('HotKey expects hot key to be string expression or key codes array, ' + typeof(hotKeyExpr) + ' given.');
+				}
+				return hotKey.sort().join('+');
 			},
 
 			/**
 			 * Register hot key handler
-			 * @param {String} hotKey
+			 * @param {String|Array.<Number>} hotKey
 			 * @param {Function} callback
 			 * @returns this
 			 */
@@ -55,7 +63,7 @@
 
 			/**
 			 * Remove registered hot key handlers
-			 * @param {String} hotKey
+			 * @param {String|Array.<Number>} hotKey
 			 * @returns this
 			 */
 			off: function(hotKey) {
@@ -66,7 +74,7 @@
 
 			/**
 			 * Trigger hot key handlers
-			 * @param {String} hotKey
+			 * @param {String|Array.<Number>} hotKey
 			 * @param {Array} [args]
 			 */
 			trigger: function(hotKey, args) {
@@ -78,6 +86,27 @@
 			}
 
 		};
+
+		/**
+		 * Observe element key press
+		 * @param {HTMLElement} element
+		 */
+		var observeElement = function(element) {
+			var keys = [];
+			element.bind('keydown', function(e) {
+				keys.push(e.keyCode);
+				HotKey.trigger(keys, [e]);
+			});
+			element.bind('keyup', function(e) {
+				keys.splice(keys.indexOf(e.keyCode), 1);
+			});
+		};
+
+		if ($window.length) {
+			observeElement($window);
+		}
+
+		return HotKey;
 	}]);
 
 	hotKeys.service('ParseKey', function() {
