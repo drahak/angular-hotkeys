@@ -24,7 +24,7 @@
 		}
 	}]);
 
-	hotKeys.service('HotKey', ['ParseKey', '$window', function(ParseKey, $window) {
+	hotKeys.service('HotKey', ['ParseKey', '$window', '$rootScope', function(ParseKey, $window, $rootScope) {
 		var hotKeys = {};
 		var HotKey = {
 
@@ -83,6 +83,10 @@
 				angular.forEach(hotKeys[hotKey], function(callback) {
 					callback.apply(callback, args);
 				});
+
+				if (!$rootScope.$$phase) {
+					$rootScope.$apply();
+				}
 			}
 
 		};
