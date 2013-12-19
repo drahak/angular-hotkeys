@@ -71,3 +71,29 @@ describe('ParseKey expression parser', function() {
 	});
 
 });
+
+describe('HotKey event manager', function() {
+
+	var hotKey;
+	beforeEach(module('drahak.hotkeys'));
+	beforeEach(inject(function(HotKey) {
+		hotKey = HotKey;
+	}));
+
+	it('triggers registered event handler', function() {
+		var handler = jasmine.createSpy();
+		hotKey.on('Ctrl + S', handler);
+		hotKey.trigger('Ctrl + S');
+
+		expect(handler).toHaveBeenCalled();
+	});
+
+	it('removes registered event handler', function() {
+		var handler = jasmine.createSpy();
+		hotKey.on('Ctrl + S', handler);
+		hotKey.off('S + Ctrl');
+		hotKey.trigger('Ctrl + S');
+		expect(handler).not.toHaveBeenCalled();
+	});
+
+});

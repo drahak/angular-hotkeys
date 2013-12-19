@@ -24,6 +24,62 @@
 		}
 	}]);
 
+	hotKeys.service('HotKey', ['ParseKey', function(ParseKey) {
+		var hotKeys = {};
+		return {
+
+			/**
+			 * Get hot key index
+			 * @param {String} hotKeyExpr
+			 * @returns {String}
+			 * @private
+			 */
+			_getHotKeyIndex: function(hotKeyExpr) {
+				return ParseKey(hotKeyExpr).sort().join('+');
+			},
+
+			/**
+			 * Register hot key handler
+			 * @param {String} hotKey
+			 * @param {Function} callback
+			 * @returns this
+			 */
+			on: function(hotKey, callback) {
+				hotKey = this._getHotKeyIndex(hotKey);
+				if (!hotKeys[hotKey]) {
+					hotKeys[hotKey] = [];
+				}
+				hotKeys[hotKey].push(callback);
+				return this;
+			},
+
+			/**
+			 * Remove registered hot key handlers
+			 * @param {String} hotKey
+			 * @returns this
+			 */
+			off: function(hotKey) {
+				hotKey = this._getHotKeyIndex(hotKey);
+				hotKeys[hotKey] = [];
+				return this;
+			},
+
+			/**
+			 * Trigger hot key handlers
+			 * @param {String} hotKey
+			 * @param {Array} [args]
+			 */
+			trigger: function(hotKey, args) {
+				args = args || [];
+				hotKey = this._getHotKeyIndex(hotKey);
+				angular.forEach(hotKeys[hotKey], function(callback) {
+					callback.apply(callback, args);
+				});
+			}
+
+		};
+	}]);
+
 	hotKeys.service('ParseKey', function() {
 		var lexer = {
 			'backspace': 8,
