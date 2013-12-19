@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html data-ng-app="drahak.hotkeys">
+	<head>
+		<meta charset="UTF-8" />
+		<title>HotKeys example</title>
+		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+		<script type="text/javascript" src="Hotkeys.js"></script>
+		<script>
+			angular.module('drahak.hotkeys').controller('Sample', function($scope) {
+				$scope.action = function(e) {
+					e.preventDefault();
+					console.log('Hotkey works', e);
+				};
+			});
+		</script>
+	</head>
+	<body data-ng-controller="Sample" hotkey="Ctrl + A" hotkey-action="action($event)">
+		<h1>HotKeys example</h1>
+
+	</body>
+</html>
