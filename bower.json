@@ -1,8 +1,9 @@
 {
 	"name": "Hotkeys",
 	"version": "0.1.0",
-	"description": "Hotkeys directive for AngularJS",
-	"dependencies": {
+	"tags": ["hotkeys", "shortcuts", "angular", "drahak"],
+	"description": "Hotkeys component for AngularJS",
+	"devDependencies": {
 		"angularjs": "latest",
 		"angular-mocks": "latest",
 		"jasmine": "v2.0.0.rc5"
