@@ -96,4 +96,18 @@ describe('HotKey event manager', function() {
 		expect(handler).not.toHaveBeenCalled();
 	});
 
+	it('registers hot key using key codes array', function() {
+		var handler = jasmine.createSpy();
+		hotKey.on([13], handler);
+		hotKey.trigger('Enter');
+		expect(handler).toHaveBeenCalled();
+	});
+
+	it('throws error if invalid hot key is given', function() {
+		var callback = function() {
+			hotKey.on(13, function(){});
+		};
+		expect(callback).toThrow();
+	});
+
 });
