@@ -17,7 +17,7 @@
 					hotKey = attrs.hotkey;
 				}
 
-				em.on(hotKey, function(e) {
+				em.bind(hotKey, function(e) {
 					invoker(scope, { $event: e })
 				});
 			}
@@ -68,7 +68,7 @@
 		 * @param {Function} callback
 		 * @returns this
 		 */
-		HotKey.prototype.on = function(hotKey, callback) {
+		HotKey.prototype.bind = function(hotKey, callback) {
 			hotKey = this._getHotKeyIndex(hotKey);
 			if (!this._hotKeys[hotKey]) {
 				this._hotKeys[hotKey] = [];
@@ -82,7 +82,7 @@
 		 * @param {String|Array.<Number>} hotKey
 		 * @returns this
 		 */
-		HotKey.prototype.off = function(hotKey) {
+		HotKey.prototype.unbind = function(hotKey) {
 			hotKey = this._getHotKeyIndex(hotKey);
 			this._hotKeys[hotKey] = [];
 			return this;

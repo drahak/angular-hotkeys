@@ -85,7 +85,7 @@ describe('HotKey event manager', function() {
 
 	it('triggers registered event handler', function() {
 		var handler = jasmine.createSpy();
-		hotKey.on('Ctrl + S', handler);
+		hotKey.bind('Ctrl + S', handler);
 		hotKey.trigger('Ctrl + S');
 
 		expect(handler).toHaveBeenCalled();
@@ -93,22 +93,22 @@ describe('HotKey event manager', function() {
 
 	it('removes registered event handler', function() {
 		var handler = jasmine.createSpy();
-		hotKey.on('Ctrl + S', handler);
-		hotKey.off('S + Ctrl');
+		hotKey.bind('Ctrl + S', handler);
+		hotKey.unbind('S + Ctrl');
 		hotKey.trigger('Ctrl + S');
 		expect(handler).not.toHaveBeenCalled();
 	});
 
 	it('registers hot key using key codes array', function() {
 		var handler = jasmine.createSpy();
-		hotKey.on([13], handler);
+		hotKey.bind([13], handler);
 		hotKey.trigger('Enter');
 		expect(handler).toHaveBeenCalled();
 	});
 
 	it('throws error if invalid hot key is given', function() {
 		var callback = function() {
-			hotKey.on(13, function(){});
+			hotKey.bind(13, function(){});
 		};
 		expect(callback).toThrow();
 	});
