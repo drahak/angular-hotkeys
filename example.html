@@ -14,7 +14,8 @@
 			});
 		</script>
 	</head>
-	<body data-ng-controller="Sample" hotkey="esc + a" hotkey-action="action($event)">
+	<body data-ng-controller="Sample" hotkey="esc + a" invoke="action($event)">
 		<h1>HotKeys example</h1>
+		<hotkey bind="enter" invoke="action($event)" />
 	</body>
 </html>

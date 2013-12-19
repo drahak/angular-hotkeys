@@ -31,8 +31,11 @@ E +r
 
 Directive
 ---------
-You can also use it as directive. Simply define hot key expression in `hotkey` attribute and action in `hotkey-action` attribute. As in any AngularJS event you can use `$event` variable to access Event object.
+You can also use it as directive. Simply define hot key expression in `hotkey` attribute and action in `invoke` attribute. As in any AngularJS event you can use `$event` variable to access Event object.
 
 ```html
-<div hotkey="Esc" hotkey-action="close($event)"></div>
+<div hotkey="Esc" invoke="close($event)"></div>
+<hotkey bind="Esc" invoke="close($event)"  />
 ```
+
+**Note:*** the hotkey directive can be used as element or attribute. If it's used as attribute, it will observe key events **only on given element**. Otherwise it will use `$window` element.

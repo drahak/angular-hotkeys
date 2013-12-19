@@ -4,12 +4,20 @@
 
 	var hotKeys = angular.module('drahak.hotkeys', []);
 
-	hotKeys.directive('hotkey', ['$parse', '$hotkey', function($parse, $hotkey) {
+	hotKeys.directive('hotkey', ['$parse', '$hotkey', 'HotKey', function($parse, $hotkey, HotKey) {
 		return {
-			restrict: 'A',
+			restrict: 'AE',
 			link: function(scope, element, attrs) {
-				var invoker = $parse(attrs.hotkeyAction);
-				$hotkey.on(attrs.hotkey, function(e) {
+				var invoker = $parse(attrs.invoke);
+
+				var em = $hotkey;
+				var hotKey = attrs.bind;
+				if (element[0].nodeName.toLowerCase() !== 'hotkey') {
+					em = HotKey(element);
+					hotKey = attrs.hotkey;
+				}
+
+				em.on(hotKey, function(e) {
 					invoker(scope, { $event: e })
 				});
 			}
@@ -25,10 +33,12 @@
 		var HotKey = function(element) {
 			this._hotKeys = {};
 			var keys = [];
+
 			element.bind('keydown', function(e) {
 				keys.push(e.keyCode);
 				this.trigger(keys, [e]);
 			}.bind(this));
+
 			element.bind('keyup', function(e) {
 				keys.splice(keys.indexOf(e.keyCode), 1);
 			}.bind(this));
@@ -101,7 +111,7 @@
 	}]);
 
 	hotKeys.factory('$hotkey', ['$window', 'HotKey', function($window, HotKey) {
-		return HotKey($window);
+		return HotKey(angular.element($window));
 	}]);
 
 	hotKeys.service('ParseKey', function() {
