@@ -11,7 +11,7 @@ angular.module('myAwesomeApp', ['drahak.hotkeys']);
 
 Hot keys expression & events
 ----------------------------
-To register hot key use `HotKey` service e.g. as include it as dependency in your controller. In base drahak.hotkeys observes keydown and keyup events on window object to match registered hot keys. Therefore you can simply add global hot key event listener:
+To register hot key use `HotKey` service e.g. include it as dependency in your controller. In base drahak.hotkeys observes keydown and keyup events on window object to match registered hot keys. Therefore you can simply add global hot key event listener:
 
 ```js
 HotKey.on('Ctrl + B', function(event) {
@@ -31,8 +31,8 @@ E +r
 
 Directive
 ---------
-You can also use it as directive. Simply define hot key expression in `hotkey` attribute and action in `hotkey-action` attribute.
+You can also use it as directive. Simply define hot key expression in `hotkey` attribute and action in `hotkey-action` attribute. As in any AngularJS event you can use `$event` variable to access Event object.
 
 ```html
-<div hotkey="Esc" hotkey-action="close()"></div>
+<div hotkey="Esc" hotkey-action="close($event)"></div>
 ```
