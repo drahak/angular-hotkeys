@@ -136,11 +136,11 @@
 			var expressions = expression.split('+');
 			
 			angular.forEach(expressions, function(expr) {
-				expr = expr.trim();
-				if (lexer[expr.toLowerCase()]) {
-					keys.push(lexer[expr.toLowerCase()]);
+				expr = expr.trim().toLowerCase();
+				if (lexer[expr]) {
+					keys.push(lexer[expr]);
 				} else if (expr.length === 1) {
-					keys.push(expr.charCodeAt(0));
+					keys.push(expr.toUpperCase().charCodeAt(0));
 				} else {
 					throw new Error('ParseKey expects one character or special expression like "Tab" or "Control", "' + expr + '" given');
 				}
