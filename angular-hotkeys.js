@@ -1,6 +1,5 @@
-'use strict';
-
 (function() {
+	'use strict';
 
 	var hotKeys = angular.module('drahak.hotkeys', []);
 
