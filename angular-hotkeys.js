@@ -3,7 +3,7 @@
 
 	var hotKeys = angular.module('drahak.hotkeys', []);
 
-	hotKeys.directive('hotkey', ['$parse', '$hotkey', 'HotKey', function($parse, $hotkey, HotKey) {
+	hotKeys.directive('hotkey', ['$parse', '$hotkey', 'HotKeys', function($parse, $hotkey, HotKeys) {
 		return {
 			restrict: 'AE',
 			link: function(scope, element, attrs) {
@@ -12,7 +12,7 @@
 				var entityManager = $hotkey;
 				var hotKey = attrs.bind;
 				if (element[0].nodeName.toLowerCase() !== 'hotkey') {
-					entityManager = HotKey(element);
+					entityManager = HotKeys(element);
 					hotKey = attrs.hotkey;
 				}
 
@@ -23,13 +23,13 @@
 		}
 	}]);
 
-	hotKeys.factory('HotKey', ['ParseKey', '$rootScope', '$window', function(ParseKey, $rootScope, $window) {
+	hotKeys.factory('HotKeys', ['ParseKey', '$rootScope', '$window', function(ParseKey, $rootScope, $window) {
 
 		/**
 		 * @param {HTMLElement} element
 		 * @constructor
 		 */
-		var HotKey = function(element) {
+		var HotKeys = function(element) {
 			this._hotKeys = {};
 			var keys = [];
 
@@ -50,7 +50,7 @@
 		 * @returns {String}
 		 * @private
 		 */
-		HotKey.prototype._getHotKeyIndex = function(hotKeyExpr) {
+		HotKeys.prototype._getHotKeyIndex = function(hotKeyExpr) {
 			var hotKey;
 			if (angular.isString(hotKeyExpr)) {
 				hotKey = ParseKey(hotKeyExpr);
@@ -68,7 +68,7 @@
 		 * @param {Function} callback
 		 * @returns this
 		 */
-		HotKey.prototype.bind = function(hotKey, callback) {
+		HotKeys.prototype.bind = function(hotKey, callback) {
 			hotKey = this._getHotKeyIndex(hotKey);
 			if (!this._hotKeys[hotKey]) {
 				this._hotKeys[hotKey] = [];
@@ -82,7 +82,7 @@
 		 * @param {String|Array.<Number>} hotKey
 		 * @returns this
 		 */
-		HotKey.prototype.unbind = function(hotKey) {
+		HotKeys.prototype.unbind = function(hotKey) {
 			hotKey = this._getHotKeyIndex(hotKey);
 			this._hotKeys[hotKey] = [];
 			return this;
@@ -93,7 +93,7 @@
 		 * @param {String|Array.<Number>} hotKey
 		 * @param {Array} [args]
 		 */
-		HotKey.prototype.trigger = function(hotKey, args) {
+		HotKeys.prototype.trigger = function(hotKey, args) {
 			args = args || [];
 			hotKey = this._getHotKeyIndex(hotKey);
 			angular.forEach(this._hotKeys[hotKey], function(callback) {
@@ -106,12 +106,12 @@
 		};
 
 		return function(element) {
-			return new HotKey(element);
+			return new HotKeys(element);
 		}
 	}]);
 
-	hotKeys.factory('$hotkey', ['$window', 'HotKey', function($window, HotKey) {
-		return HotKey(angular.element($window));
+	hotKeys.factory('$hotkey', ['$window', 'HotKeys', function($window, HotKeys) {
+		return HotKeys(angular.element($window));
 	}]);
 
 	hotKeys.service('ParseKey', function() {

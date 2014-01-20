@@ -76,11 +76,11 @@ describe('HotKey event manager', function() {
 
 	var hotKey;
 	beforeEach(module('drahak.hotkeys'));
-	beforeEach(inject(function(HotKey) {
+	beforeEach(inject(function(HotKeys) {
 		var elementFake = {
 			bind: function() {}
 		};
-		hotKey = HotKey(elementFake);
+		hotKey = HotKeys(elementFake);
 	}));
 
 	it('triggers registered event handler', function() {
