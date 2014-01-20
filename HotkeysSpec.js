@@ -70,6 +70,13 @@ describe('ParseKey expression parser', function() {
 		expect(arrows).toEqual([37, 38, 39, 40]);
 	});
 
+	it('fails if one expression is invalid', function() {
+		var trigger = function() {
+			parse('left + esc + a + some + right');
+		};
+		expect(trigger).toThrow();
+	});
+
 });
 
 describe('HotKey event manager', function() {
