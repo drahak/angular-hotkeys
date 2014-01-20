@@ -34,7 +34,7 @@
 			var keys = [];
 
 			element.bind('keydown', function(e) {
-				keys.push(e.keyCode);
+				if (keys.indexOf(e.keyCode) === -1) keys.push(e.keyCode);
 				this.trigger(keys, [e]);
 			}.bind(this));
 
