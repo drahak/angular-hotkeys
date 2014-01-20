@@ -145,7 +145,7 @@ describe('HotKey element', function() {
 		expect(element.scope().$hotKeys).toBe(hotKeys);
 	});
 
-	it('triggers hotkey when on key down', function() {
+	it('triggers hotkey on key down', function() {
 		element.triggerHandler('keydown');
 		expect(hotKeys.trigger).toHaveBeenCalled();
 	});
