@@ -1,6 +1,6 @@
 {
-	"name": "Hotkeys",
-	"version": "0.1.0",
+	"name": "angular-hotkeys",
+	"version": "0.2.0",
 	"tags": ["hotkeys", "shortcuts", "angular", "drahak"],
 	"description": "Hotkeys component for AngularJS",
 	"devDependencies": {
