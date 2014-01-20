@@ -77,10 +77,7 @@ describe('HotKey event manager', function() {
 	var hotKey;
 	beforeEach(module('drahak.hotkeys'));
 	beforeEach(inject(function(HotKeys) {
-		var elementFake = {
-			bind: function() {}
-		};
-		hotKey = HotKeys(elementFake);
+		hotKey = HotKeys();
 	}));
 
 	it('triggers registered event handler', function() {
@@ -111,6 +108,39 @@ describe('HotKey event manager', function() {
 			hotKey.bind(13, function(){});
 		};
 		expect(callback).toThrow();
+	});
+
+});
+
+describe('HotKey element', function() {
+
+	var scope = null;
+	var element = null;
+	var hotKeys = null;
+	beforeEach(module('drahak.hotkeys'));
+	beforeEach(function() {
+		module({
+			HotKeys: function() {
+				return {
+					trigger: jasmine.createSpy()
+				}
+			}
+		});
+		inject(function(HotKeysElement, $window) {
+			scope = {};
+			element = angular.element($window);
+			spyOn(element, 'scope').andReturn(scope);
+			hotKeys = HotKeysElement(element);
+		});
+	});
+
+	it('adds HotKeys service to element scope as $hotKeys', function() {
+		expect(element.scope().$hotKeys).toBe(hotKeys);
+	});
+
+	it('triggers hotkey when on key down', function() {
+		element.triggerHandler('keydown');
+		expect(hotKeys.trigger).toHaveBeenCalled();
 	});
 
 });

@@ -3,7 +3,7 @@
 
 	var hotKeys = angular.module('drahak.hotkeys', []);
 
-	hotKeys.directive('hotkey', ['$parse', '$hotkey', 'HotKeys', function($parse, $hotkey, HotKeys) {
+	hotKeys.directive('hotkey', ['$parse', '$hotkey', 'HotKeysElement', function($parse, $hotkey, HotKeysElement) {
 		return {
 			restrict: 'AE',
 			link: function(scope, element, attrs) {
@@ -12,7 +12,7 @@
 				var entityManager = $hotkey;
 				var hotKey = attrs.bind;
 				if (element[0].nodeName.toLowerCase() !== 'hotkey') {
-					entityManager = HotKeys(element);
+					entityManager = HotKeysElement(element);
 					hotKey = attrs.hotkey;
 				}
 
@@ -23,25 +23,43 @@
 		}
 	}]);
 
-	hotKeys.factory('HotKeys', ['ParseKey', '$rootScope', '$window', function(ParseKey, $rootScope, $window) {
+	hotKeys.factory('HotKeysElement', ['$window', 'HotKeys', function($window, HotKeys) {
 
 		/**
-		 * @param {HTMLElement} element
-		 * @constructor
+		 * @params {HTMLElement} element
+		 * @returns {HotKeys}
 		 */
-		var HotKeys = function(element) {
-			this._hotKeys = {};
+		return function(element) {
 			var keys = [];
+			var elem = angular.element(element);
+			var root = angular.element($window);
+			var scope = elem.scope();
+			var hotKeys = HotKeys();
 
-			angular.element($window).bind('blur', function() { keys = []; });
-			element.bind('keydown', function(e) {
+			/** @type {HotKeys} */
+			if (scope) scope.$hotKeys = hotKeys;
+
+			root.bind('blur', function() { keys = []; });
+			elem.bind('keydown', function(e) {
 				if (keys.indexOf(e.keyCode) === -1) keys.push(e.keyCode);
-				this.trigger(keys, [e]);
+				hotKeys.trigger(keys, [e]);
 			}.bind(this));
 
-			element.bind('keyup', function(e) {
+			elem.bind('keyup', function(e) {
 				keys.splice(keys.indexOf(e.keyCode), 1);
 			}.bind(this));
+
+			return hotKeys;
+		};
+	}]);
+
+	hotKeys.factory('HotKeys', ['ParseKey', '$rootScope', function(ParseKey, $rootScope) {
+
+		/**
+		 * @constructor
+		 */
+		var HotKeys = function() {
+			this._hotKeys = {};
 		};
 
 		/**
@@ -105,13 +123,13 @@
 			}
 		};
 
-		return function(element) {
-			return new HotKeys(element);
+		return function() {
+			return new HotKeys();
 		}
 	}]);
 
-	hotKeys.factory('$hotkey', ['$window', 'HotKeys', function($window, HotKeys) {
-		return HotKeys(angular.element($window));
+	hotKeys.factory('$hotkey', ['$window', 'HotKeysElement', function($window, HotKeysElement) {
+		return HotKeysElement($window);
 	}]);
 
 	hotKeys.service('ParseKey', function() {
