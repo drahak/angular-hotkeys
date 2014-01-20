@@ -9,21 +9,21 @@
 			link: function(scope, element, attrs) {
 				var invoker = $parse(attrs.invoke);
 
-				var em = $hotkey;
+				var entityManager = $hotkey;
 				var hotKey = attrs.bind;
 				if (element[0].nodeName.toLowerCase() !== 'hotkey') {
-					em = HotKey(element);
+					entityManager = HotKey(element);
 					hotKey = attrs.hotkey;
 				}
 
-				em.bind(hotKey, function(e) {
-					invoker(scope, { $event: e })
+				entityManager.bind(hotKey, function(e) {
+					invoker(scope, { $event: e });
 				});
 			}
 		}
 	}]);
 
-	hotKeys.factory('HotKey', ['ParseKey', '$rootScope', function(ParseKey, $rootScope) {
+	hotKeys.factory('HotKey', ['ParseKey', '$rootScope', '$window', function(ParseKey, $rootScope, $window) {
 
 		/**
 		 * @param {HTMLElement} element
@@ -33,6 +33,7 @@
 			this._hotKeys = {};
 			var keys = [];
 
+			angular.element($window).bind('blur', function() { keys = []; });
 			element.bind('keydown', function(e) {
 				if (keys.indexOf(e.keyCode) === -1) keys.push(e.keyCode);
 				this.trigger(keys, [e]);
