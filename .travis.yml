@@ -1,9 +1,8 @@
 language: node_js
 
 before_script:
-  - npm install --quite -g karma
   - npm install
   - bower install
 
 script:
-  - karma start ./karma.conf.js --single-run --browsers PhantomJS --reporters=dots
+  - ./node_modules/karma/bin/karma start ./karma.conf.js --single-run --browsers PhantomJS --reporters=dots
