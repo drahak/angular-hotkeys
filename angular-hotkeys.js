@@ -43,11 +43,11 @@
 			elem.bind('keydown', function(e) {
 				if (keys.indexOf(e.keyCode) === -1) keys.push(e.keyCode);
 				hotKeys.trigger(keys, [e]);
-			}.bind(this));
+			});
 
 			elem.bind('keyup', function(e) {
 				keys.splice(keys.indexOf(e.keyCode), 1);
-			}.bind(this));
+			});
 
 			return hotKeys;
 		};
