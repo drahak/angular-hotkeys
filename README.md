@@ -1,4 +1,4 @@
-AngularJS hotkeys
+AngularJS hotkeys [![Build status](https://api.travis-ci.org/drahak/angular-hotkeys.png)](https://travis-ci.org/drahak/angular-hotkeys)
 =================
 
 Installation & setup
