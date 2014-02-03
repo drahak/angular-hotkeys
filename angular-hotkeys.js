@@ -7,17 +7,22 @@
 		return {
 			restrict: 'AE',
 			link: function(scope, element, attrs) {
-				var invoker = $parse(attrs.invoke);
-
-				var entityManager = $hotkey;
-				var hotKey = attrs.bind;
-				if (element[0].nodeName.toLowerCase() !== 'hotkey') {
-					entityManager = HotKeysElement(element);
-					hotKey = attrs.hotkey;
+				var hotkeys = scope.$eval(attrs.hotkey || attrs.bind);
+				if (angular.isUndefined(hotkeys)) {
+					var invoker = $parse(attrs.invoke);
+					hotkeys = {};
+					hotkeys[attrs.hotkey || attrs.bind] = function(event) {
+						invoker(scope, { $event: event });
+					}
 				}
 
-				entityManager.bind(hotKey, function(e) {
-					invoker(scope, { $event: e });
+				var isUsedAsAttribute = element[0].nodeName.toLowerCase() !== 'hotkey';
+				var entityManager = isUsedAsAttribute ?
+					HotKeysElement(element) :
+					$hotkey;
+
+				angular.forEach(hotkeys, function(handler, hotkey) {
+					entityManager.bind(hotkey, handler);
 				});
 			}
 		}

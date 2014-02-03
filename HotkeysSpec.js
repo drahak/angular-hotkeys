@@ -151,3 +151,54 @@ describe('HotKey element', function() {
 	});
 
 });
+
+describe('Hotkey directive', function() {
+
+	var $compile;
+	var $rootScope;
+	var hotKeyElement;
+	beforeEach(module('drahak.hotkeys'));
+	beforeEach(function() {
+		var mockHotKey = function() {
+			return { bind: jasmine.createSpy() };
+		};
+		hotKeyElement = mockHotKey();
+		module({
+			$hotkey: mockHotKey(),
+			HotKeysElement: function() {
+				return hotKeyElement;
+			}
+		});
+		inject(function(_$compile_, _$rootScope_) {
+			$compile = _$compile_;
+			$rootScope = _$rootScope_;
+		});
+	});
+
+	it('binds event from hotkey and invoke attributes to hotkey event manager', function() {
+		$compile('<div hotkey="Ctrl + S" invoke="test()"></div>')($rootScope);
+		expect(hotKeyElement.bind).toHaveBeenCalledWith('Ctrl + S', jasmine.any(Function));
+	});
+
+	it('binds events from hotkey attribute if we pass object', function() {
+		$rootScope.handler = function() {};
+		$rootScope.handlerToo = function() {};
+		$compile('<div hotkey="{ \'Ctrl + S\': handler, \'Shift + J\': handlerToo }"></div>')($rootScope);
+		expect(hotKeyElement.bind).toHaveBeenCalledWith('Ctrl + S', $rootScope.handler);
+		expect(hotKeyElement.bind).toHaveBeenCalledWith('Shift + J', $rootScope.handlerToo);
+	});
+
+	it('binds events to global scope', inject(function($hotkey) {
+		$compile('<hotkey bind="Ctrl + A" invoke="handler"></hotkey>')($rootScope);
+		expect($hotkey.bind).toHaveBeenCalledWith('Ctrl + A', jasmine.any(Function));
+	}));
+
+	it('binds events to global scope using object in bind attribute', inject(function($hotkey) {
+		$rootScope.handler = function() {};
+		$rootScope.handlerToo = function() {};
+		$compile('<hotkey bind="{ \'Ctrl + S\': handler, \'Shift + J\': handlerToo }"></hotkey>')($rootScope);
+		expect($hotkey.bind).toHaveBeenCalledWith('Ctrl + S', $rootScope.handler);
+		expect($hotkey.bind).toHaveBeenCalledWith('Shift + J', $rootScope.handlerToo);
+	}));
+
+});

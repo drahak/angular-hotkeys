@@ -16,13 +16,20 @@
 					e.preventDefault();
 					$scope.text += "AngularJS";
 				};
+				$scope.largeMessage = function(e) {
+					e.preventDefault();
+					$scope.text += "AngularJS rocks!";
+				}
 			});
 		</script>
 	</head>
 	<body data-ng-controller="Sample" hotkey="esc + a" invoke="action($event)">
 		<h1>HotKeys example</h1>
-		<textarea hotkey="ctrl + a" invoke="message($event)" data-ng-model="text">
-		</textarea>
+		<textarea hotkey="ctrl + a" invoke="message($event)" data-ng-model="text"></textarea>
+		<textarea hotkey="{
+			'ctrl + a': message,
+			'ctrl + shift + a': largeMessage
+		}" data-ng-model="text"></textarea>
 		<hotkey bind="ctrl + enter" invoke="action($event)" />
 	</body>
 </html>
