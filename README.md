@@ -38,6 +38,8 @@ You can also use it as directive. Simply add hot key to `hotkey` attribute and a
 <hotkey bind="Esc" invoke="close($event)"  />
 ```
 
+**Important note:** this component **does not prevent default browser events**. Threfore it could block your hotkey. You can prevent it by calling `event.preventDefault()` where event is current browser event also available as `$event` in `invoke` and `hotkey` attributes.  
+
 **Note:** the hotkey directive can be used as element or attribute. If it's used as attribute, it will observe key events **only on given element**. Otherwise it will use `$window` element.
 
 To define more events within single element pass object to `hotkey` or `bind` attribute. Note you can only pass function references. It's not possible to pass angular expression at the moment. Handler function only takes one parameter (`event`).
