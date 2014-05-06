@@ -30,12 +30,24 @@
 
 	hotKeys.factory('HotKeysElement', ['$window', 'HotKeys', function($window, HotKeys) {
 
+		// TODO: find better way how to support multiple key codes for a key
+		var replace = { 
+			93: 91 // commmand key codes
+		};
+
+		var code = null;
+		var getKeyCode = function(event) {
+			code = event.keyCode;
+			return typeof replace[code] !== 'undefined' ? replace[code] : code;
+		};
+
 		/**
 		 * @params {HTMLElement} element
 		 * @returns {HotKeys}
 		 */
 		return function(element) {
 			var keys = [];
+			var key = null;
 			var elem = angular.element(element);
 			var root = angular.element($window);
 			var scope = elem.scope();
@@ -46,12 +58,13 @@
 
 			root.bind('blur', function() { keys = []; });
 			elem.bind('keydown', function(e) {
-				if (keys.indexOf(e.keyCode) === -1) keys.push(e.keyCode);
+				key = getKeyCode(e);
+				if (keys.indexOf(key) === -1) keys.push(key);
 				hotKeys.trigger(keys, [e]);
 			});
 
-			elem.bind('keyup', function(e) {
-				keys.splice(keys.indexOf(e.keyCode), 1);
+			elem.bind('keyup', function(e) { 
+				keys.splice(keys.indexOf(getKeyCode(e)), 1); 
 			});
 
 			return hotKeys;
@@ -161,7 +174,7 @@
 			'command': commandKeyCode,
 			'cmd': commandKeyCode
 		};
-		
+
 		return function(expression) {
 			var keys = [];
 			var expressions = expression.split('+');
