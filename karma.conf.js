@@ -10,10 +10,12 @@ module.exports = function (config) {
 		],
 		plugins: [
 			'karma-jasmine',
+			'karma-opera-launcher',
 			'karma-chrome-launcher',
+			'karma-firefox-launcher',
 			'karma-phantomjs-launcher'
 		],
 		autoWatch: true,
-		browsers: ['Chrome']
+		browsers: ['Chrome', 'Firefox', 'Opera']
 	});
 };
