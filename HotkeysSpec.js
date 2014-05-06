@@ -2,10 +2,11 @@
 
 describe('ParseKey expression parser', function() {
 
-	var parse;
+	var parse, userAgent;
 	beforeEach(module('drahak.hotkeys'));
-	beforeEach(inject(function(ParseKey) {
+	beforeEach(inject(function(ParseKey, $window) {
 		parse = ParseKey;
+		userAgent = $window.navigator.userAgent.toLowerCase();
 	}));
 
 	it('parses string into keycodes array', function() {
@@ -75,6 +76,14 @@ describe('ParseKey expression parser', function() {
 			parse('left + esc + a + some + right');
 		};
 		expect(trigger).toThrow();
+	});
+
+	it('parses command key', function() {
+		var commandKeyCode = userAgent.indexOf('firefox') > -1 ? 224 : (userAgent.indexOf('opera') > -1 ? 17 : 91);
+		var command = parse('Command');
+		var cmd = parse('Cmd');
+		expect(cmd).toEqual([commandKeyCode]);
+		expect(command).toEqual([commandKeyCode]);
 	});
 
 });
