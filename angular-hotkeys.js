@@ -150,39 +150,42 @@
 		return HotKeysElement($window);
 	}]);
 
-	hotKeys.service('ParseKey', ['$window', function($window) {
+	hotKeys.value('keyAlias', {
+		'backspace': 8, 'return': 8,
+		'tab': 9, 'tabulator': 9,
+		'enter': 13,
+		'shift': 16,
+		'ctrl': 17, 'control': 17,
+		'alt': 18,
+		'esc': 27, 'escape': 27,
+		'left': 37,
+		'up': 38,
+		'right': 39,
+		'down': 40,
+		'insert': 45,
+		'del': 46,
+		'delete': 46,
+	});
+
+	hotKeys.run(['$window', 'keyAlias', function($window, keyAlias) {
 		var userAgent = $window.navigator.userAgent.toLowerCase();
 		var isFirefox = userAgent.indexOf('firefox') > -1;
 		var isOpera = userAgent.indexOf('opera') > -1;
 		var commandKeyCode = isFirefox ? 224 : (isOpera ? 17 : 91 /* webkit */); 
 
-		var lexer = {
-			'backspace': 8, 'return': 8,
-			'tab': 9, 'tabulator': 9,
-			'enter': 13,
-			'shift': 16,
-			'ctrl': 17, 'control': 17,
-			'alt': 18,
-			'esc': 27, 'escape': 27,
-			'left': 37,
-			'up': 38,
-			'right': 39,
-			'down': 40,
-			'insert': 45,
-			'del': 46,
-			'delete': 46,
-			'command': commandKeyCode,
-			'cmd': commandKeyCode
-		};
+		keyAlias.command = commandKeyCode;
+		keyAlias.cmd = commandKeyCode;
+	}]);
 
+	hotKeys.service('ParseKey', ['$window', 'keyAlias', function($window, keyAlias) {
 		return function(expression) {
 			var keys = [];
 			var expressions = expression.split('+');
 			
 			angular.forEach(expressions, function(expr) {
 				expr = expr.trim().toLowerCase();
-				if (lexer[expr]) {
-					keys.push(lexer[expr]);
+				if (typeof keyAlias[expr] !== 'undefined') {
+					keys.push(keyAlias[expr]);
 				} else if (expr.length === 1) {
 					keys.push(expr.toUpperCase().charCodeAt(0));
 				} else {
