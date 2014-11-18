@@ -1,5 +1,6 @@
 {
-  "name": "angular-hotkeys",
+  "name": "angular-hotkey",
+  "description": "Hotkeys component for AngularJS",
   "version": "0.2.1",
   "devDependencies": {
     "bower": "~1.2.2",
