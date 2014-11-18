@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html data-ng-app="drahak.hotkeys">
+<html data-ng-app="example">
 	<head>
 		<meta charset="UTF-8" />
 		<title>HotKeys example</title>
 		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 		<script type="text/javascript" src="angular-hotkeys.js"></script>
 		<script>
-			angular.module('drahak.hotkeys').controller('Sample', function($scope) {
+			angular.module('example', ['drahak.hotkeys']).run(function(keyAlias) {
+				keyAlias['custom'] = 13;
+			}).controller('Sample', function($scope) {
 				$scope.text = 'lorem ipsum';
 				$scope.action = function(e) {
 					e.preventDefault();
@@ -23,7 +25,7 @@
 			});
 		</script>
 	</head>
-	<body data-ng-controller="Sample" hotkey="esc + a" invoke="action($event)">
+	<body data-ng-controller="Sample" hotkey="Custom" invoke="action($event)">
 		<h1>HotKeys example</h1>
 		<textarea hotkey="ctrl + a" invoke="message($event)" data-ng-model="text"></textarea>
 		<textarea hotkey="{
