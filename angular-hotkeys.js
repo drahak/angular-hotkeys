@@ -188,6 +188,8 @@
 					keys.push(keyAlias[expr]);
 				} else if (expr.length === 1) {
 					keys.push(expr.toUpperCase().charCodeAt(0));
+				} else if (parseInt(expr) == expr) {
+					keys.push(parseInt(expr));
 				} else {
 					throw new Error('ParseKey expects one character or special expression like "Tab" or "Control", "' + expr + '" given');
 				}
