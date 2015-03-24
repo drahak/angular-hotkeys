@@ -31,7 +31,7 @@
 	hotKeys.factory('HotKeysElement', ['$window', 'HotKeys', function($window, HotKeys) {
 
 		// TODO: find better way how to support multiple key codes for a key
-		var replace = { 
+		var replace = {
 			93: 91 // commmand key codes
 		};
 
@@ -49,22 +49,20 @@
 			var keys = [];
 			var key = null;
 			var elem = angular.element(element);
-			var root = angular.element($window);
 			var scope = elem.scope();
 			var hotKeys = HotKeys();
 
 			/** @type {HotKeys} */
 			if (scope) scope.$hotKeys = hotKeys;
 
-			root.bind('blur', function() { keys = []; });
 			elem.bind('keydown', function(e) {
 				key = getKeyCode(e);
 				if (keys.indexOf(key) === -1) keys.push(key);
 				hotKeys.trigger(keys, [e]);
 			});
 
-			elem.bind('keyup', function(e) { 
-				keys.splice(keys.indexOf(getKeyCode(e)), 1); 
+			elem.bind('keyup', function(e) {
+				keys = [];
 			});
 
 			return hotKeys;
@@ -171,7 +169,7 @@
 		var userAgent = $window.navigator.userAgent.toLowerCase();
 		var isFirefox = userAgent.indexOf('firefox') > -1;
 		var isOpera = userAgent.indexOf('opera') > -1;
-		var commandKeyCode = isFirefox ? 224 : (isOpera ? 17 : 91 /* webkit */); 
+		var commandKeyCode = isFirefox ? 224 : (isOpera ? 17 : 91 /* webkit */);
 
 		keyAlias.command = commandKeyCode;
 		keyAlias.cmd = commandKeyCode;
@@ -181,7 +179,7 @@
 		return function(expression) {
 			var keys = [];
 			var expressions = expression.split('+');
-			
+
 			angular.forEach(expressions, function(expr) {
 				expr = expr.trim().toLowerCase();
 				if (typeof keyAlias[expr] !== 'undefined') {
