@@ -49,12 +49,14 @@
 			var keys = [];
 			var key = null;
 			var elem = angular.element(element);
+			var root = angular.element($window);
 			var scope = elem.scope();
 			var hotKeys = HotKeys();
 
 			/** @type {HotKeys} */
 			if (scope) scope.$hotKeys = hotKeys;
 
+			root.bind('blur', function() { keys = []; });
 			elem.bind('keydown', function(e) {
 				key = getKeyCode(e);
 				if (keys.indexOf(key) === -1) keys.push(key);
@@ -62,7 +64,16 @@
 			});
 
 			elem.bind('keyup', function(e) {
-				keys = [];
+				var code = getKeyCode(e);
+
+				if(code === 91) {
+					// If command is up, better to clean the keys because you don't have keyup event for any key after command was pressed
+					// http://bitspushedaround.com/on-a-few-things-you-may-not-know-about-the-hellish-command-key-and-javascript-events/
+					keys = [];
+				} else {
+					keys.splice(keys.indexOf(code), 1);
+				}
+
 			});
 
 			return hotKeys;
