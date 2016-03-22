@@ -112,6 +112,17 @@ describe('HotKey event manager', function() {
 		expect(handler).not.toHaveBeenCalled();
 	});
 
+	it('removes concrete registered event handler', function() {
+		var handler1 = jasmine.createSpy();
+		var handler2 = jasmine.createSpy();
+		hotKey.bind('Ctrl + S', handler1);
+		hotKey.bind('Ctrl + S', handler2);
+		hotKey.unbind('S + Ctrl', handler1);
+		hotKey.trigger('Ctrl + S');
+		expect(handler1).not.toHaveBeenCalled();
+		expect(handler2).toHaveBeenCalled();
+	});
+
 	it('registers hot key using key codes array', function() {
 		var handler = jasmine.createSpy();
 		hotKey.bind([13], handler);
