@@ -31,7 +31,7 @@
 	hotKeys.factory('HotKeysElement', ['$window', 'HotKeys', function($window, HotKeys) {
 
 		// TODO: find better way how to support multiple key codes for a key
-		var replace = { 
+		var replace = {
 			93: 91 // commmand key codes
 		};
 
@@ -63,8 +63,17 @@
 				hotKeys.trigger(keys, [e]);
 			});
 
-			elem.bind('keyup', function(e) { 
-				keys.splice(keys.indexOf(getKeyCode(e)), 1); 
+			elem.bind('keyup', function(e) {
+				var code = getKeyCode(e);
+
+				if(code === 91) {
+					// If command is up, better to clean the keys because you don't have keyup event for any key after command was pressed
+					// http://bitspushedaround.com/on-a-few-things-you-may-not-know-about-the-hellish-command-key-and-javascript-events/
+					keys = [];
+				} else {
+					keys.splice(keys.indexOf(code), 1);
+				}
+
 			});
 
 			return hotKeys;
@@ -171,7 +180,7 @@
 		var userAgent = $window.navigator.userAgent.toLowerCase();
 		var isFirefox = userAgent.indexOf('firefox') > -1;
 		var isOpera = userAgent.indexOf('opera') > -1;
-		var commandKeyCode = isFirefox ? 224 : (isOpera ? 17 : 91 /* webkit */); 
+		var commandKeyCode = isFirefox ? 224 : (isOpera ? 17 : 91 /* webkit */);
 
 		keyAlias.command = commandKeyCode;
 		keyAlias.cmd = commandKeyCode;
@@ -181,7 +190,7 @@
 		return function(expression) {
 			var keys = [];
 			var expressions = expression.split('+');
-			
+
 			angular.forEach(expressions, function(expr) {
 				expr = expr.trim().toLowerCase();
 				if (typeof keyAlias[expr] !== 'undefined') {
